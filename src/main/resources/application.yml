@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: file-upload
+
+  multipart:
+    maxFileSize: 10Mb
+    maxRequestSize: 10Mb
+
+server:
+  servlet:
+    contextPath: /file-upload
+  port: 8081
+logging:
+  level:
+    ROOT: info
