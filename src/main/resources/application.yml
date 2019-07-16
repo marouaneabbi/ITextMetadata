@@ -8,7 +8,7 @@ spring:
 
 server:
   servlet:
-    contextPath: /file-upload
+    contextPath: /metadata-pdf
   port: 8081
 logging:
   level:
