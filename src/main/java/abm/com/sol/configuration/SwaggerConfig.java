@@ -23,7 +23,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("hsbc.com.sol"))
+                .apis(RequestHandlerSelectors.basePackage("abm.com.sol"))
                 .paths(PathSelectors.any())
                 .build().apiInfo(metaData())
                 .useDefaultResponseMessages(false);
