@@ -31,10 +31,10 @@ public class FileUploadController {
     static PdfName LAST_MODIFIED = new PdfName("LastModified");
     static PdfName PRIVATE = new PdfName("Private");
     PdfReader pdfReader = null;
-    PdfDocument pdfDoc=null;
+    PdfDocument pdfDoc = null;
 
     @PostMapping
-    @ApiOperation(value = "Make a POST request to upload the file",
+    @ApiOperation(value = "Make a Post for setting PieceInfoDictionary embedded on the pdf ",
             produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The POST call is Successful"),
@@ -45,23 +45,7 @@ public class FileUploadController {
             @ApiParam(name = "file", value = "Select the file to Upload", required = true)
             @RequestPart MultipartFile file) {
 
-        log.info("starting uploading file ");
-
-        log.info("file name is {} ", file.getName());
-
-        // binary content
-        /*
-        try {
-            File testFile = new File("test");
-            FileUtils.writeByteArrayToFile(testFile, file.getBytes());
-            List<String> lines = FileUtils.readLines(testFile);
-            lines.forEach(line -> System.out.println(line));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>("Failed", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        */
-        // add PDD'S using itext 7
+        log.info("starting uploading file name, {}", file.getName());
 
         PdfName appName = new PdfName("IBM-ODIndexes");
         PdfName dataName1 = new PdfName("Cname");
@@ -78,17 +62,6 @@ public class FileUploadController {
 
         }
 
-       /**
-       try {
-            pdfReader = new PdfReader(testFile);
-        } catch (IOException e) {
-            log.warn("error when converting file to PdfReader: {} ", e);
-            return new ResponseEntity<String>("Failed", HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }*/
-
-
-        // update xmp meta-data
         File destFile = new File("new_PDD_metadata.pdf");
         try {
             pdfDoc = new PdfDocument(new PdfReader(testFile), new PdfWriter(destFile));
@@ -96,8 +69,6 @@ public class FileUploadController {
             e.printStackTrace();
         }
 
-        //int pages = pdfReader.getNumberOfPages();
-        //PdfDocument pdfDocument = new PdfDocument(pdfReader);
         int pages = pdfDoc.getNumberOfPages();
 
         for (int p = 1; p <= pages; p++) {
@@ -106,12 +77,13 @@ public class FileUploadController {
         }
 
         pdfDoc.close();
+        log.info("End uploading file name, {}", file.getName());
 
         return new ResponseEntity<String>("Done", HttpStatus.OK);
     }
 
     @PostMapping("/getPieceInfoDictionary")
-    @ApiOperation(value = "Make a POST request to get infoPieceDictionnary from file in the query",
+    @ApiOperation(value = "Make a Post for getting PieceInfoDictionary embedded on the pdf",
             produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The POST call is Successful"),
@@ -145,13 +117,13 @@ public class FileUploadController {
         PdfDocument pdfDocument = new PdfDocument(pdfReader);
         int pages = pdfDocument.getNumberOfPages();
 
-            PdfDictionary pieceInfo = pdfDocument.getPage(1).getPdfObject().getAsDictionary(PIECE_INFO);
+        PdfDictionary pieceInfo = pdfDocument.getPage(1).getPdfObject().getAsDictionary(PIECE_INFO);
+        log.info("END uploading file name, {} ", file.getName());
 
-            return new ResponseEntity<String>(String.valueOf(pieceInfo), HttpStatus.OK);
+        return new ResponseEntity<String>(String.valueOf(pieceInfo), HttpStatus.OK);
     }
 
     void addPieceInfo(PdfDocument pdfDocument, PdfName app, PdfName name1, PdfName name2, PdfName name3, PdfName name4, PdfObject value1, PdfObject value2, PdfObject value3, PdfObject value4, int p) {
-
 
         PdfDictionary pieceInfo = pdfDocument.getPage(p).getPdfObject().getAsDictionary(PIECE_INFO);
         if (pieceInfo == null) {

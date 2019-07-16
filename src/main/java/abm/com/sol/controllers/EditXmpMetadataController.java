@@ -31,7 +31,7 @@ public class EditXmpMetadataController {
     PdfReader pdfReader = null;
 
     @GetMapping("/getMetadata")
-    @ApiOperation(value = "Make a POST request to upload the file",
+    @ApiOperation(value = "Make a GET for getting XmpMetadata embedded on the pdf ",
             produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The POST call is Successful"),
@@ -62,7 +62,7 @@ public class EditXmpMetadataController {
     }
 
     @PostMapping("/setMetadata")
-    @ApiOperation(value = "Make a POST request to upload the file",
+    @ApiOperation(value = "Make a POST for setting XmpMetadata embedded on the pdf ",
             produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The POST call is Successful"),
