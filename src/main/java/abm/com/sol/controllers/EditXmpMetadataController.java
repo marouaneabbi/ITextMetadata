@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 public class EditXmpMetadataController {
 
 
-    private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
+    private static final Logger log = LoggerFactory.getLogger(EditXmpMetadataController.class);
 
     static PdfName PIECE_INFO = new PdfName("PieceInfo");
     static PdfName LAST_MODIFIED = new PdfName("LastModified");

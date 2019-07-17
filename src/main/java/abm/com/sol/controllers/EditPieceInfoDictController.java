@@ -21,11 +21,11 @@ import java.io.IOException;
 @Api(value = "Guidelines", tags = "Upload files")
 /*
 
-FileUploadController
+EditPieceInfoDictController
  */
-public class FileUploadController {
+public class EditPieceInfoDictController {
 
-    private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
+    private static final Logger log = LoggerFactory.getLogger(EditPieceInfoDictController.class);
 
     static PdfName PIECE_INFO = new PdfName("PieceInfo");
     static PdfName LAST_MODIFIED = new PdfName("LastModified");
