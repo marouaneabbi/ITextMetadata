@@ -18,7 +18,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/upload")
 
-@Api(value = "Guidelines", tags = "Upload files")
+@Api(value = "Guidelines", tags = "Edit pieceInfoDictionary", description = "Edit piceInfosDictionary Metadata on pdf file")
 /*
 
 EditPieceInfoDictController
@@ -84,7 +84,7 @@ public class EditPieceInfoDictController {
 
     @PostMapping("/getPieceInfoDictionary")
     @ApiOperation(value = "Make a Post for getting PieceInfoDictionary embedded on the pdf",
-            produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+            produces = "MediaType.APPLICATION_XML_VALUE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The POST call is Successful"),
             @ApiResponse(code = 500, message = "The POST call is Failed"),
@@ -117,7 +117,8 @@ public class EditPieceInfoDictController {
         PdfDocument pdfDocument = new PdfDocument(pdfReader);
         int pages = pdfDocument.getNumberOfPages();
 
-        PdfDictionary pieceInfo = pdfDocument.getPage(1).getPdfObject().getAsDictionary(PIECE_INFO);
+        //PdfDictionary pieceInfo = pdfDocument.getPage(1).getPdfObject().getAsDictionary(PIECE_INFO);
+        PdfDictionary pieceInfo = pdfDocument.getTrailer().getAsDictionary(PIECE_INFO);
         log.info("END uploading file name, {} ", file.getName());
 
         return new ResponseEntity<String>(String.valueOf(pieceInfo), HttpStatus.OK);

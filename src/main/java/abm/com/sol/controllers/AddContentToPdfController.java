@@ -26,7 +26,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/edit")
 
-@Api(value = "Guidelines", tags = "Filling out file", description = "Filling out a Pdf file")
+@Api(value = "Guidelines", tags = "Filling out file", description = "Filling out a pdf file")
 public class AddContentToPdfController {
 
 

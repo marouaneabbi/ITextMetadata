@@ -18,7 +18,7 @@ import java.nio.charset.Charset;
 @RestController
 @RequestMapping("/XmpMetadata")
 
-@Api(value = "Guidelines", tags = "Upload files")
+@Api(value = "Guidelines", tags = "Edit XMPMetadata", description = "Edit XMPMetadata on pdf file")
 
 public class EditXmpMetadataController {
 
@@ -29,10 +29,11 @@ public class EditXmpMetadataController {
     static PdfName LAST_MODIFIED = new PdfName("LastModified");
     static PdfName PRIVATE = new PdfName("Private");
     PdfReader pdfReader = null;
+    PdfStream pdfStream = null;
 
-    @GetMapping("/getMetadata")
+    @PostMapping("/getMetadata")
     @ApiOperation(value = "Make a GET for getting XmpMetadata embedded on the pdf ",
-            produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+            produces = "MediaType.APPLICATION_XML_VALUE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The POST call is Successful"),
             @ApiResponse(code = 500, message = "The POST call is Failed"),
@@ -44,7 +45,7 @@ public class EditXmpMetadataController {
 
         log.info("starting uploading file name: {}", file.getName());
 
-        File testFile = new File("PDD_metadata.pdf");
+        File testFile = new File("Read-XMPMetadata.pdf");
         try {
             FileUtils.writeByteArrayToFile(testFile, file.getBytes());
         } catch (IOException e) {
@@ -54,11 +55,11 @@ public class EditXmpMetadataController {
         }
 
         try {
-            readXmpMetadata(testFile);
+            pdfStream = readXmpMetadata(testFile);
         } catch (IOException e) {
             log.warn("error when reading XmpMedataData from file: {} ", e);
         }
-        return new ResponseEntity<String>("Done", HttpStatus.OK);
+        return new ResponseEntity<String>(new String(pdfStream.getBytes()), HttpStatus.OK);
     }
 
     @PostMapping("/setMetadata")
@@ -75,7 +76,7 @@ public class EditXmpMetadataController {
 
         log.info("starting setting XmpMetadata file name: {}", file.getName());
 
-        File testFile = new File("PDD_metadata.pdf");
+        File testFile = new File("XMPMetadata.pdf");
         try {
             FileUtils.writeByteArrayToFile(testFile, file.getBytes());
         } catch (IOException e) {
@@ -99,14 +100,14 @@ public class EditXmpMetadataController {
     /**
      * Extracts PDF Metadata and returns the meta data as byte array.
      */
-     byte[] readXmpMetadata(File file) throws IOException {
+    PdfStream readXmpMetadata(File file) throws IOException {
 
         PdfReader pdfReader = new PdfReader(file);
         PdfDocument pdfDocument = new PdfDocument(pdfReader);
-        byte[] b = pdfDocument.getXmpMetadata();
-        System.out.println(new String(b));
+        pdfStream = pdfDocument.getFirstPage().getXmpMetadata();
+        System.out.println(new String(pdfStream.getBytes()));
 
-        return b;
+        return pdfStream;
     }
 
     /**
@@ -116,7 +117,7 @@ public class EditXmpMetadataController {
     void writXmpMetadata(File file) throws IOException {
 
         // update xmp meta-data
-        File destFile = new File("new_XMP_metadata.pdf");
+        File destFile = new File("new_XMPMetadata.pdf");
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
 
         pdfDoc.getFirstPage().setXmpMetadata(getXMPMetadata());
